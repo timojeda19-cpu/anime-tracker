@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anime Tracker</title>
+<meta name="description" content="Timothy's glanceable Crunchyroll anime tracker.">
+<meta name="theme-color" content="#0b0b14">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Anime Tracker">
+<style>
+:root{--bg:#0b0b14;--card:#151524;--card2:#1c1c30;--line:#2a2a44;--txt:#f2f2f7;--mut:#9a9ab5;--orange:#f77f00;--orange2:#ffb347;--green:#3ddc97;--violet:#8b7bff}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+body{padding:max(18px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom));max-width:520px;margin:0 auto;background:radial-gradient(600px 300px at 80% -10%,rgba(247,127,0,.18),transparent 70%),radial-gradient(500px 300px at -10% 20%,rgba(139,123,255,.14),transparent 70%),var(--bg);min-height:100vh}
+header{display:flex;align-items:center;gap:12px;margin:4px 2px 18px}
+header img{width:40px;height:40px;border-radius:11px}
+h1{font-size:20px;margin:0;letter-spacing:.2px}
+header p{margin:0;color:var(--mut);font-size:13px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px}
+.stat.big{grid-column:1/-1;display:flex;align-items:flex-end;justify-content:space-between}
+.num{font-size:44px;font-weight:800;line-height:1;letter-spacing:-1px}
+.stat.big .num{font-size:64px;background:linear-gradient(90deg,var(--orange),var(--orange2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lbl{color:var(--mut);font-size:13px;margin-top:6px}
+.est{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--orange2);border:1px solid rgba(255,179,71,.4);border-radius:999px;padding:1px 7px;margin-left:4px;vertical-align:2px}
+.green{color:var(--green)}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:1.2px;color:var(--mut);margin:24px 4px 10px}
+.top{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.top li{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px}
+.rank{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:18px;background:var(--card2);color:var(--mut)}
+.top li:first-child{border-color:rgba(247,127,0,.55);box-shadow:0 0 0 1px rgba(247,127,0,.15),0 10px 30px -12px rgba(247,127,0,.45)}
+.top li:first-child .rank{background:var(--orange);color:#111}
+.t{font-weight:700;font-size:16px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;margin-top:4px;color:var(--mut)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--mut)}
+.live .dot{background:var(--orange);box-shadow:0 0 0 0 rgba(247,127,0,.7);animation:p 1.6s infinite}
+.live{color:var(--orange2)}
+.next .dot{background:var(--violet)}.next{color:#b9b0ff}
+.warn{color:#ffd166}.warn .dot{background:#ffd166}
+@keyframes p{70%{box-shadow:0 0 0 8px rgba(247,127,0,0)}100%{box-shadow:0 0 0 0 rgba(247,127,0,0)}}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:rgba(61,220,151,.1);color:var(--green);border:1px solid rgba(61,220,151,.3);border-radius:999px;padding:5px 11px;font-size:13px}
+details{margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+summary{cursor:pointer;padding:14px 16px;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"▾";color:var(--mut);transition:transform .2s}
+details[open] summary::after{transform:rotate(180deg)}
+.hist{list-style:none;margin:0;padding:0 8px 10px;max-height:60vh;overflow:auto}
+.hist li{display:flex;justify-content:space-between;padding:9px 8px;border-top:1px solid var(--line);font-size:14px;color:#d6d6e4}
+.hist li.done{color:var(--green)}
+footer{color:var(--mut);font-size:11.5px;text-align:center;margin-top:22px;line-height:1.5}
+</style>
+</head>
+<body>
+<header>
+  <img src="icons/icon-192.png" alt="">
+  <div><h1>Timothy's Anime Tracker</h1><p>Crunchyroll watch history</p></div>
+</header>
+
+<section class="stats">
+  <div class="stat big"><div><div class="num">63</div><div class="lbl">titles in Crunchyroll history</div></div></div>
+  <div class="stat"><div class="num green">6</div><div class="lbl">confirmed finished</div></div>
+  <div class="stat"><div class="num">~1.7k</div><div class="lbl">hours watched <span class="est">estimate</span></div></div>
+</section>
+
+<h2>Top 3 right now</h2>
+<ol class="top">
+  <li><div class="rank">1</div><div><div class="t">Mashle: Magic and Muscles</div><div class="tag live"><span class="dot"></span>Watching now</div></div></li>
+  <li><div class="rank">2</div><div><div class="t">The Misfit of Demon King Academy</div><div class="tag next"><span class="dot"></span>Up next · Crunchyroll</div></div></li>
+  <li><div class="rank">3</div><div><div class="t">The Eminence in Shadow</div><div class="tag warn"><span class="dot"></span>On HIDIVE, not Crunchyroll</div></div></li>
+</ol>
+
+<h2>Finished</h2>
+<div class="chips"><span class="chip">Overgeared</span><span class="chip">Reborn as a Space Mercenary</span><span class="chip">Skeleton Knight in Another World</span><span class="chip">Shangri-La Frontier</span><span class="chip">The Rising of the Shield Hero</span><span class="chip">Mushoku Tensei</span></div>
+
+<details>
+  <summary>Full history</summary>
+  <ul class="hist">
+<li><span>That Time I Got Reincarnated as a Slime</span></li>
+<li><span>Attack on Titan</span></li>
+<li><span>Berserk (2016)</span></li>
+<li><span>Black Clover</span></li>
+<li><span>Blood Blockade Battlefront</span></li>
+<li><span>Boruto: Naruto Next Generations</span></li>
+<li><span>Bungo Stray Dogs</span></li>
+<li><span>Chainsaw Man</span></li>
+<li><span>Chainsaw Man – The Movie</span></li>
+<li><span>Daemons of the Shadow Realm</span></li>
+<li><span>Dan Da Dan</span></li>
+<li><span>Dead Account</span></li>
+<li><span>Demon Slayer: Mugen Train</span></li>
+<li><span>Demon Slayer: Swordsmith Village Arc</span></li>
+<li><span>Dr. Stone</span></li>
+<li><span>Dragon Ball</span></li>
+<li><span>Dragon Ball Daima</span></li>
+<li><span>Dragon Ball GT</span></li>
+<li><span>Dragon Ball Super</span></li>
+<li><span>Dragon Ball Super: Beerus</span></li>
+<li><span>Dragon Ball Z</span></li>
+<li><span>Fated Magical Princess</span></li>
+<li><span>Fire Force</span></li>
+<li><span>Frontier Lord</span></li>
+<li><span>Gachiakuta</span></li>
+<li><span>Gatherer&#x27;s Adventure in Isekai</span></li>
+<li><span>Jujutsu Kaisen</span></li>
+<li><span>Kaiju No. 8</span></li>
+<li><span>Hell&#x27;s Paradise</span></li>
+<li><span>Lord of Mysteries</span></li>
+<li class="done"><span>Mushoku Tensei: Jobless Reincarnation</span><b>✓</b></li>
+<li><span>My Hero Academia</span></li>
+<li><span>My Status as an Assassin Obviously Exceeds the Hero&#x27;s</span></li>
+<li><span>Naruto</span></li>
+<li><span>Naruto (movies)</span></li>
+<li><span>Naruto Shippuden</span></li>
+<li><span>Teogonia</span></li>
+<li><span>One Piece</span></li>
+<li><span>Tougen Anki</span></li>
+<li class="done"><span>Overgeared</span><b>✓</b></li>
+<li><span>Tower of God</span></li>
+<li><span>Rascal Does Not Dream</span></li>
+<li><span>Re:Zero</span></li>
+<li class="done"><span>Reborn as a Space Mercenary</span><b>✓</b></li>
+<li><span>Reign of the Seven Spellblades</span></li>
+<li><span>Rent-a-Girlfriend</span></li>
+<li class="done"><span>The Rising of the Shield Hero</span><b>✓</b></li>
+<li><span>Sabikui Bisco</span></li>
+<li><span>The Saint&#x27;s Magic Power is Omnipotent</span></li>
+<li><span>Sentenced to Be a Hero</span></li>
+<li class="done"><span>Shangri-La Frontier</span><b>✓</b></li>
+<li><span>SHY</span></li>
+<li class="done"><span>Skeleton Knight in Another World</span><b>✓</b></li>
+<li><span>Solo Leveling</span></li>
+<li><span>Soul Eater</span></li>
+<li><span>Spy x Family</span></li>
+<li><span>Hunter x Hunter (2011)</span></li>
+<li><span>Twin Angel Break</span></li>
+<li><span>Wind Breaker</span></li>
+<li><span>Wistoria: Wand and Sword</span></li>
+<li><span>Witch Hat Atelier</span></li>
+<li><span>You and Idol Precure</span></li>
+  </ul>
+</details>
+
+<footer>Hours are a rough estimate assuming completed series (~24 min/episode).<br>Updated Oct 29, 2026</footer>
+
+<script>
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('sw.js')); }
+</script>
+</body>
+</html>
